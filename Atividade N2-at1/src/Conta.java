@@ -1,17 +1,19 @@
 public abstract class Conta {
     private int numeroConta;
     private String titular;
-    private double saldo;
+    private double saldoInicial = 1404.00;
 
-    public Conta(int numero, String titular, double saldoInicial) {
+    public Conta(int numero, String titular) {
         this.numeroConta = numero;
         this.titular = titular;
-        this.saldo = saldoInicial;
     }
 
     public void depositar(double valor) {
         if (valor > 0) {
-            this.saldo += valor;
+            this.saldoInicial += valor;
+            System.out.println("Parabens, depósito realizado com sucesso.");
+        } else {
+            System.out.println("Valor de depósito nao pode ser menor ou igual a zero.");
         }
     }
 
@@ -19,15 +21,19 @@ public abstract class Conta {
         if (valor <= 0) {
             throw new SaldoInsuficienteException("nao podemos sacar um valor que seja menor ou igual a zero.");
         }
-        if (valor > saldo) {
+        if (valor > saldoInicial) {
             throw new SaldoInsuficienteException("saldo da conta e inferior a esse valor de saque.");
+        }else{
+            saldoInicial -= valor;
         }
-//        saldo -= valor;
     }
 
+    public boolean podeSacar(double valor) {
+        return valor > 0 && valor <= saldoInicial;
+    }
 
-    public double getSaldo() {
-        return saldo;
+    public double getSaldoInicial() {
+        return saldoInicial;
     }
 
     public int getNumeroConta() {
@@ -38,6 +44,6 @@ public abstract class Conta {
         return titular;
     }
 
-    public abstract void atualizarSaldo();
+    public abstract void aplicarJuros(double valor);
 }
 
